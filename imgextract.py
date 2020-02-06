@@ -72,6 +72,7 @@ def CheckForNonImage(sub):
 def GetFolderName():
     #Allows user to define what the folder name is
     #if it does not exist already then it is created
+    #Script must be in a folder to run properly. Permission errors may occur otherwise
     folder_name = input("Folder Name: ")
     folder_path = Path(os.path.join(os.getcwd() + "\\" + folder_name))
     if folder_path.is_dir() == False:
@@ -82,7 +83,6 @@ def DownloadImage(sub,save_location):
     #returns 1 if succesful
     #0 if failed
     #TODO: 
-        #Create dynamic filepath or create a folder for each time script is ran
         
     try:
         img_content = requests.get(sub.url).content
