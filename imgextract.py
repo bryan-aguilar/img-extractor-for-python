@@ -4,6 +4,7 @@ import io
 from PIL import Image
 import re
 import os
+from pathlib import Path
 #establish reddit instance
 reddit = praw.Reddit(client_id='oFIVlnHQfgXjYQ',
                      client_secret='xt6o0AWVDm23ytFkZaav4L-sKZc',
@@ -12,20 +13,18 @@ reddit = praw.Reddit(client_id='oFIVlnHQfgXjYQ',
 def main():
     #TODO:
         #check for duplicates
-        #allow user to define their own search criteria(top/hot/recent/controversial)
-        #allow user to define how many they would like to retrieve
-
-    #stores a list of urls to a list of 10 hottest submissions
-    
+        #allow user to define their own search criteria(top/hot/recent/controversial)  
     user_sub = GetSub()
     num_download = GetNumDownload()
 
     download_count = 0 
+    folder_loc = GetFolderName()
     for submission in user_sub.top(limit=999):
         if download_count == num_download:
             break
         if CheckForNonImage(submission):
-            download_count += DownloadImage(submission)
+            download_count += DownloadImage(submission,str(folder_loc))
+
 def GetNumDownload():
     #returns the amount of of images user would like to download
     #currently softcapped at 100 until further error checking can be done
@@ -70,8 +69,15 @@ def CheckForNonImage(sub):
         return True
     else:
         return False
-
-def DownloadImage(sub):
+def GetFolderName():
+    #Allows user to define what the folder name is
+    #if it does not exist already then it is created
+    folder_name = input("Folder Name: ")
+    folder_path = Path(os.path.join(os.getcwd() + "\\" + folder_name))
+    if folder_path.is_dir() == False:
+        os.makedirs(folder_path)
+    return folder_path
+def DownloadImage(sub,save_location):
     #downloads and stores image as jpg
     #returns 1 if succesful
     #0 if failed
@@ -85,10 +91,11 @@ def DownloadImage(sub):
         return 0
     #create filename based off url
     file_name = sub.id
+    
     try:
         img_file = io.BytesIO(img_content)
         img = Image.open(img_file).convert('RGB')
-        file_path = os.path.join('C:\\Users\\bagui\\Images\\' + file_name + '.jpg')
+        file_path = os.path.join(save_location +"\\" + file_name + '.jpg')
         with open(file_path, 'wb') as f:
             img.save(f, "JPEG", quality=85)
         print(f"SUCCESS - saved {sub.url} - as {file_path}")
