@@ -11,7 +11,6 @@ reddit = praw.Reddit(client_id='oFIVlnHQfgXjYQ',
 
 def main():
     #TODO:
-        #scrub the list to find remove non img links
         #check for duplicates
         #allow user to define their own subreddit
         #allow user to define their own search criteria(top/hot/recent/controversial)
@@ -22,7 +21,7 @@ def main():
     for submission in earth_porn_sr.top(limit=10):
         if CheckForNonImage(submission):
             DownloadImage(submission)
-            
+
 def CheckForNonImage(sub):
     #check to see if the passed in URL is a direct image
     #returns True or False 
@@ -36,9 +35,7 @@ def DownloadImage(sub):
     #downloads and stores image as jpg
     #TODO: 
         #Create dynamic filepath or create a folder for each time script is ran
-        #Done - 2/4/2020-BGA Create dynamic filename
-        #
-
+        
     try:
         img_content = requests.get(sub.url).content
     except Exception as e:
