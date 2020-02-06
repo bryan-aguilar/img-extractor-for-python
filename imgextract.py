@@ -17,10 +17,31 @@ def main():
         #allow user to define how many they would like to retrieve
 
     #stores a list of urls to a list of 10 hottest submissions
-    earth_porn_sr = reddit.subreddit('EarthPorn')
-    for submission in earth_porn_sr.top(limit=10):
+    
+    user_sub = GetSub()
+    for submission in user_sub.top(limit=10):
         if CheckForNonImage(submission):
             DownloadImage(submission)
+def GetSub():
+    #returns the subreddit instance of the subreddit we will be using
+    
+    exists = False
+    while exists == False:
+        user_req_sub = str(input("Please enter in a subreddit name: "))
+        if(user_req_sub == ""):
+            continue
+        if CheckExists(user_req_sub) == True:
+            return reddit.subreddit(user_req_sub)
+        
+def CheckExists(sub_name):
+    #checks if a subreddit exists
+    try:
+        reddit.subreddits.search_by_name(sub_name, exact = True)
+        return True
+    except Exception as e:
+        print(f'Error with subreddt {sub_name} - {e}')
+        return False
+    
 
 def CheckForNonImage(sub):
     #check to see if the passed in URL is a direct image
@@ -45,7 +66,7 @@ def DownloadImage(sub):
     try:
         img_file = io.BytesIO(img_content)
         img = Image.open(img_file).convert('RGB')
-        file_path = os.path.join('C:\\Users\\bagui\\py\\imgextract\\' + file_name + '.jpg')
+        file_path = os.path.join('C:\\Users\\bagui\\Images\\' + file_name + '.jpg')
         with open(file_path, 'wb') as f:
             img.save(f, "JPEG", quality=85)
         print(f"SUCCESS - saved {sub.url} - as {file_path}")
