@@ -19,40 +19,20 @@ def main():
 
     #stores a list of urls to a list of 10 hottest submissions
     earth_porn_sr = reddit.subreddit('EarthPorn')
-    links = []
     for submission in earth_porn_sr.top(limit=10):
-        links.append(submission.url)
-    for i in links:
-        print(CheckForNonImage(i))
-def CheckForNonImage(url):
+        if CheckForNonImage(submission):
+            DownloadImage(submission)
+            
+def CheckForNonImage(sub):
     #check to see if the passed in URL is a direct image
     #returns True or False 
-    content = requests.get(url).text
-    title = content[content.find('<title>') + 7 : content.find('</title>')]
-    return title
+    domain = sub.domain
+    if domain == "i.redd.it" or domain == "i.imgur.com":
+        return True
+    else:
+        return False
 
-def ParseTitle(url):
-    #parses the title using regular expressions.
-    #this title will be used as our file name
-    #TODO:
-        #clean up the regex
-        #pretty sure the stripping loop isnt neccessary
-
-    title = re.compile(r'/\w+(?:\.\w{3}$)')
-    
-    #convert list to string so its only single element
-    parsed = parsed[0]
-    final = ''
-    #strips the first slash and file extension
-    for i in range(1,len(parsed)):
-        if parsed[i] == '.':
-            break
-        else:
-            final += parsed[i]
-    return final
-
-
-def DownloadImage(url):
+def DownloadImage(sub):
     #downloads and stores image as jpg
     #TODO: 
         #Create dynamic filepath or create a folder for each time script is ran
@@ -60,20 +40,20 @@ def DownloadImage(url):
         #
 
     try:
-        img_content = requests.get(url).content
+        img_content = requests.get(sub.url).content
     except Exception as e:
-        print(f'Could not download {url} - {e}')
+        print(f'Could not download {sub.url} - {e}')
     #create filename based off url
-    file_name = ParseTitle(url)
+    file_name = sub.id
     try:
         img_file = io.BytesIO(img_content)
         img = Image.open(img_file).convert('RGB')
         file_path = os.path.join('C:\\Users\\bagui\\py\\imgextract\\' + file_name + '.jpg')
         with open(file_path, 'wb') as f:
             img.save(f, "JPEG", quality=85)
-        print(f"SUCCESS - saved {url} - as {file_path}")
+        print(f"SUCCESS - saved {sub.url} - as {file_path}")
     except Exception as e:
-        print(f'Could not download {url} - {e}')
+        print(f'Could not download {sub.url} - {e}')
 
 main()
 
