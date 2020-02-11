@@ -6,14 +6,17 @@ import re
 import os
 from pathlib import Path
 #establish reddit instance
-reddit = praw.Reddit(client_id='oFIVlnHQfgXjYQ',
-                     client_secret='xt6o0AWVDm23ytFkZaav4L-sKZc',
-                     user_agent='imgextract 1.0 /u/forrealbro')
+
+#reddit = praw.Reddit(client_id='oFIVlnHQfgXjYQ',
+                     #client_secret='xt6o0AWVDm23ytFkZaav4L-sKZc',
+                     #user_agent='imgextract 1.0 /u/forrealbro')
 
 def main():
     #TODO:
         #check for duplicates
         #allow user to define their own search criteria(top/hot/recent/controversial)  
+
+    
     user_sub = GetSub()
     num_download = GetNumDownload()
 
@@ -24,6 +27,27 @@ def main():
             break
         if CheckForNonImage(submission):
             download_count += DownloadImage(submission,str(folder_loc))
+def getRedditInstance():
+    #reads our creds file and creates/returns a reddit instance
+    os.chdir(os.path.join(os.getcwd())+'\\Src')
+    print(os.getcwd())
+    with open("creds.txt") as credFile:
+        creds = credFile.readline()
+    creds_list = creds.split(',')
+    creds_regex = re.compile(r'=.+')
+    for i in range(len(creds_list)):
+        x = creds_regex.search(creds_list[i])
+        #overwrite without equal sign
+        creds_list[i]=x.group()[1:]
+    user_client_id = creds_list[0]
+    user_client_secret = creds_list[1]
+    user_user_agent = creds_list[2]
+    return praw.Reddit(client_id=user_client_id,
+                     client_secret=user_client_secret,
+                     user_agent=user_user_agent)
+
+    
+
 
 def GetNumDownload():
     #returns the amount of of images user would like to download
@@ -103,7 +127,7 @@ def DownloadImage(sub,save_location):
     except Exception as e:
         print(f'Could not download {sub.url} - {e}')
         return 0
-
+reddit = getRedditInstance()
 main()
 
     
