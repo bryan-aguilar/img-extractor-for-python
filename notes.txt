@@ -1,0 +1,2 @@
+Method to check if a self post or not
+    https://stackoverflow.com/questions/54520751/how-do-i-check-if-a-reddit-post-contains-only-an-image-and-nothing-else
