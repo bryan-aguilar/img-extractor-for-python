@@ -5,12 +5,6 @@ from PIL import Image
 import re
 import os
 from pathlib import Path
-#establish reddit instance
-
-#reddit = praw.Reddit(client_id='oFIVlnHQfgXjYQ',
-                     #client_secret='xt6o0AWVDm23ytFkZaav4L-sKZc',
-                     #user_agent='imgextract 1.0 /u/forrealbro')
-
 def main():
     #TODO:
         #check for duplicates
@@ -27,9 +21,11 @@ def main():
             break
         if CheckForNonImage(submission):
             download_count += DownloadImage(submission,str(folder_loc))
+
+            
 def getRedditInstance():
     #reads our creds file and creates/returns a reddit instance
-    os.chdir(os.path.join(os.getcwd())+'\\Src')
+    os.chdir(os.path.join(os.getcwd())+'\\src')
     print(os.getcwd())
     with open("creds.txt") as credFile:
         creds = credFile.readline()
@@ -127,6 +123,7 @@ def DownloadImage(sub,save_location):
     except Exception as e:
         print(f'Could not download {sub.url} - {e}')
         return 0
+#establish reddit instance
 reddit = getRedditInstance()
 main()
 
