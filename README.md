@@ -2,9 +2,9 @@
 ## Overview
 This is a command line python script that will scrape images off of a specified subreddit. Utilizes the PRAW library to communicate with the reddit API.
 ## Requirements
-Python >= version 3.8<br/>
-Ensure proper dependencies are installed using requirements file<br/>
-`pip install -r requirements.txt`<br/>
+Python >= version 3.8<br>
+Ensure proper dependencies are installed using requirements file<br>
+`pip install -r requirements.txt`<br>
 Script needs to be contained in its own subdirectory to avoid permission issues with saving the images
 ### Getting your own reddit auth token
 Click [here](https://www.reddit.com/prefs/apps/) to create your own reddit app.  Use this [guide](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example#first-steps) to answer basic questions about authentication.
